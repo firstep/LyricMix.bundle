@@ -1,0 +1,15 @@
+[
+  {
+    "id"      : "NETEASE_SECRET",
+    "label"   : "NetEase Secret (Cookie)",
+    "type"    : "text",
+    "default" : ""
+  },
+  {
+    "id"      : "DEV_MODE",
+    "label"   : "",
+    "type"    : "bool",
+    "default" : "false",
+    "hidden"  : "true"
+  }
+]
