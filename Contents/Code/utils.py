@@ -54,6 +54,7 @@ def has_local_lyric(track):
     if track.items:
         for item in track.items:
             for part in item.parts:
+                
                 if part.file:
                     (file_root, fext) = os.path.splitext(part.file)
                     lyric_file = file_root + '.lrc'

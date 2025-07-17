@@ -38,9 +38,12 @@ def search(artist, album=None, track=None):
                 Log.Debug('[search] Search album: %s', album)
 
             albums = music_api.search(artist, album) # type: ignore
+            foundAlbumCount = len(albums)
+            Log.Debug('[search] Found %d albums for artist %s', foundAlbumCount, artist)
             for item in albums:
-                if utils.levenshtein_score(album, item['name']) < 85:
-                    Log.Debug('[search] Album %s score is too low, skip, expected is %s', item['name'], album)
+                score = utils.levenshtein_score(album, item['name'])
+                if (foundAlbumCount > 1 and score < 85) or (foundAlbumCount == 1 and score < 50):
+                    Log.Debug('[search] Album %s score is too low[%d], skip, expected is %s', item['name'], score, album)
                     continue
                 
                 albuminfo = music_api.album_info(item["idStr"]) # type: ignore

@@ -33,8 +33,9 @@
 
 **手动刷新专辑歌词**
 
-您可以访问以下 URL 来手动刷新指定专辑的歌词：
-`http://{你的Plex服务器IP或域名}:{你的Plex端口}/lyric-mix/albums/{album_id}/refresh?X-Plex-Token={your_plex_token}`
+您可以访问以下 URL 来手动刷新指定歌手/专辑的歌词：
+ * `http://{你的Plex服务器IP或域名}:{你的Plex端口}/lyric-mix/artists/{歌手ID}/refresh?X-Plex-Token={你的PLEX服务器Token}`
+ * `http://{你的Plex服务器IP或域名}:{你的Plex端口}/lyric-mix/albums/{专辑ID}/refresh?X-Plex-Token={你的PLEX服务器Token}`
 
 -----
 

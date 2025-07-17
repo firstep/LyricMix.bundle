@@ -33,8 +33,9 @@ As the new Plex Music Agent no longer directly supports secondary plugins for me
 
 **Manually Refresh Album Lyrics**
 
-You can manually trigger a lyrics refresh for a specific album by visiting this URL:
-`http://{your_plex_server_ip_or_domain}:{your_plex_port}/lyric-mix/albums/{album_id}/refresh?X-Plex-Token={your_plex_token}`
+You can manually trigger a lyrics refresh for a specific artist/album by visiting this URL:
+ * `http://{your_plex_server_ip_or_domain}:{your_plex_port}/lyric-mix/artists/{artist_id}/refresh?X-Plex-Token={your_plex_token}`
+ * `http://{your_plex_server_ip_or_domain}:{your_plex_port}/lyric-mix/albums/{album_id}/refresh?X-Plex-Token={your_plex_token}`
 
 -----
 
