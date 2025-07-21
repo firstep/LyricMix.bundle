@@ -8,6 +8,12 @@ from collections import defaultdict
 
 import utils
 
+class ApiError(Exception):
+    """Custom exception for API errors."""
+    def __init__(self, message):
+        super(ApiError, self).__init__(message)
+        self.message = message
+    
 class MusicApiBase(object):
     def search(self, artist=None, album=None, track=None):
         raise NotImplementedError("search() must be implemented by subclass")
@@ -30,6 +36,13 @@ def set_music_api(api):
     global music_api
     music_api = api
 
+def music_api_enabled():
+    global music_api
+    if not music_api:
+        Log.Warn('[music_api_enabled] music_api is not set')
+        return False
+    return music_api.enabled()
+
 def search(artist, album=None, track=None):
     if album:
         try:
@@ -51,6 +64,8 @@ def search(artist, album=None, track=None):
                     return albuminfo['songs']
                 else:
                     return []
+        except ApiError:
+            raise
         except Exception as e:
             import traceback
             Log.Error('[search] Error searching album %s by artist %s: %s\n%s', album, artist, e, traceback.format_exc())
@@ -73,11 +88,11 @@ def add_lyric(metadata, album, track, song, valid_keys, track_key):
     if utils.levenshtein_score(track_name, song['name']) > 85:
         try:
             Log.Debug('[add_lyric] Track %s add lyric', track.title)
-            (has, lyricfile) = utils.has_local_lyric(track)
-            Log.Debug('[add_lyric] Track %s has local lyric: %s, file: %s', track_name, has, lyricfile)
+            (has, lyricfile, lyricformat) = utils.has_local_lyric(track)
+            Log.Debug('[add_lyric] Track %s has local lyric: %s, format: %s, url: %s', track_name, has, lyricformat, lyricfile)
             if has:
                 if metadata:
-                    metadata.tracks[track_key].lyrics[lyricfile] = Proxy.LocalFile(lyricfile, format='lrc')
+                    metadata.tracks[track_key].lyrics[lyricfile] = Proxy.Remote(lyricfile, format=lyricformat) if lyricfile.startswith('http') else Proxy.LocalFile(lyricfile, format=lyricformat)
                     valid_keys[track_key].append(lyricfile)
                 return True
 

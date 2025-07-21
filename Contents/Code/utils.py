@@ -51,13 +51,14 @@ def extract_chinese_name(text):
 
 def has_local_lyric(track):
     lyric_file = ""
-    if track.items:
-        for item in track.items:
-            for part in item.parts:
-                
-                if part.file:
-                    (file_root, fext) = os.path.splitext(part.file)
-                    lyric_file = file_root + '.lrc'
-                    if os.path.exists(file_root + '.lrc'):
-                        return True, lyric_file
-    return False, lyric_file
+    for item in track.items:
+        for part in item.parts:
+            for stream in part.streams:
+                if stream.type == 4 and stream.codec == 'lrc':
+                    return True, stream.url, stream.format
+            if part.file:
+                (file_root, fext) = os.path.splitext(part.file)
+                lyric_file = file_root + '.lrc'
+                if os.path.exists(file_root + '.lrc'):
+                    return True, lyric_file, 'lrc'
+    return False, lyric_file, None

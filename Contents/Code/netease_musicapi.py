@@ -10,7 +10,7 @@ import json
 import urllib
 
 import utils
-from core import MusicApiBase
+from core import MusicApiBase, ApiError
 
 class NeteaseMusicApi(MusicApiBase):
     NOT_LOGIN_CODE = 50000005
@@ -129,10 +129,10 @@ class NeteaseMusicApi(MusicApiBase):
         if data["code"] == self.NOT_LOGIN_CODE:
             Log.Warn("[exchange] Not Login")
             self.headers["Cookie"] = ""  # clear cookie
-            return None
+            raise ApiError("Netease Music API Not Login")
         elif data["code"] != 200:
             Log.Warn("[exchange] %s, response: %s", data["code"], content)
-            return None
+            raise ApiError("Netease Music API Error: %s" % data["code"])
         
         return data
     

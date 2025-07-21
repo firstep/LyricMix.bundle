@@ -2,7 +2,7 @@
 # Author: firstep <https://github.com/firstep>
 # Created: 2025-07-08
 # LyricMix.bundle - External API Module
-from core import update_metadata
+from core import update_metadata, music_api_enabled
 
 class ExternalApi(Object):
     def __init__(self):
@@ -46,6 +46,9 @@ class ExternalApi(Object):
 
     def refresh_album(self, matadata_id, metadata_type='album'):
         try:
+            if not music_api_enabled():
+                Log.Warn('[refresh_album] music API is not enabled')
+                return 'Music API is not enabled, please check your settings.'
             cls = getattr(Framework.api.agentkit.Media, '_class_named')('Album' if metadata_type == 'album' else 'Artist')
             if not cls:
                 Log.Warn('[refresh_album] unsupported metadata class, matadata_id: %s', matadata_id)
@@ -62,7 +65,7 @@ class ExternalApi(Object):
             
             Log.Debug('[refresh_album] refreshing matadata: %s, title: %s, parentTitle: %s', matadata.id, matadata.title, matadata.parentTitle)
             if metadata_type == 'album':
-                update_metadata(None, album, Locale.Language.NoLanguage, force=True)
+                update_metadata(None, matadata, Locale.Language.NoLanguage, force=True)
             else:
                 artist = matadata.title
                 for album in matadata.children:
@@ -73,7 +76,7 @@ class ExternalApi(Object):
         except Exception as e:
             import traceback
             Log.Error('[refresh_album] Error refreshing album %s: %s\n%s', matadata_id, e, traceback.format_exc())
-            return 'Error refreshing album'
+            return 'Error refreshing album, error message: %s' % e
 
     def extract_payload(self):
         content_type = Request.Headers.get('Content-Type', '').strip()

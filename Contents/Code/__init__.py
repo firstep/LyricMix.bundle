@@ -46,6 +46,9 @@ class LyricMixAgent(Agent.Album):
         if not music_api.enabled():
             Log.Error('Netease Music API is not enabled, please check your settings.')
             return
-        update_metadata(metadata, media, lang, force)
-
+        try:
+            update_metadata(metadata, media, lang, force)
+        except Exception as e:
+            import traceback
+            Log.Error('Error updating metadata: %s\n%s', e, traceback.format_exc())
 
